@@ -3,7 +3,7 @@ public class InputLayer extends Layer
 {
     public InputLayer(int neuronCount)
     {
-        super(neuronCount, new IneffectiveActivationFunction());
+        super("I", neuronCount, new IneffectiveActivationFunction());
     }
     
     public void input(TrainingInput input)

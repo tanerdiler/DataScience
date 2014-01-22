@@ -22,7 +22,7 @@ public class Network
                 outputLayer = new OutputLayer(counts[i]);
                 currentLayer = outputLayer;
             } else {
-                HiddenLayer layer = new HiddenLayer(counts[i]);
+                HiddenLayer layer = new HiddenLayer(i, counts[i]);
                 hiddenLayers.add(layer);
                 currentLayer = layer;
             }
@@ -35,6 +35,23 @@ public class Network
         }
     }
     
+    public void ask (TraningSet trainingSet) {
+        this.trainingSet = trainingSet;
+        
+        trainingSet.next();
+        
+        inputLayer.input(trainingSet.input());
+
+        for (int i = 0; i < hiddenLayers.size(); i++) {
+            HiddenLayer layer = hiddenLayers.get(i);
+            layer.execute();
+        }
+        
+        outputLayer.execute();
+        
+        outputLayer.print();   
+    }
+    
     public void train (TraningSet trainingSet) {
         this.trainingSet = trainingSet;
         
@@ -42,7 +59,7 @@ public class Network
         
         inputLayer.input(trainingSet.input());
 
-        for (int k = 0; k < 100000000; k++) {
+        for (int k = 0; k < 2; k++) {
             for (int i = 0; i < hiddenLayers.size(); i++) {
                 HiddenLayer layer = hiddenLayers.get(i);
                 layer.execute();
@@ -50,11 +67,27 @@ public class Network
             
             outputLayer.execute();
             
-            outputLayer.updateWeight(trainingSet.output());
+            System.out.println("AFTER EXECUTION");
+            
+            for (int i = 0; i < hiddenLayers.size(); i++) {
+                HiddenLayer layer = hiddenLayers.get(i);
+                layer.print();
+            }
+            
+            outputLayer.print();
+            
+            outputLayer.propagate(trainingSet.output());
             
             for (int i = hiddenLayers.size() - 1; i >= 0 ; i--) {
                 HiddenLayer layer = hiddenLayers.get(i);
-                layer.updateWeight();
+                layer.propagate();
+            }
+            
+            System.out.println("AFTER PROPAGATION");
+            
+            for (int i = 0; i < hiddenLayers.size(); i++) {
+                HiddenLayer layer = hiddenLayers.get(i);
+                layer.print();
             }
             
             outputLayer.print();            
@@ -71,6 +104,12 @@ public class Network
         outputs.add(new TrainingOutput(2));
         
         TraningSet trainingSet = new TraningSet(inputs, outputs);
+        
+        inputs = new ArrayList<TrainingInput>();
+        inputs.add(new TrainingInput(0,0));
+        
+        TraningSet testingSet = new TraningSet(inputs, null);
+        TraningSet testingSet2 = new TraningSet(inputs, null);
         network.train(trainingSet);
     }
     

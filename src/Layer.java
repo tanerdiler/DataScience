@@ -4,17 +4,18 @@ import java.util.List;
 
 public abstract class Layer
 {
-    private Type type;
+    private String name;
     
     protected List<Neuron> neurons = new ArrayList<Neuron>();
     
     private Layer previous;
     private Layer next;
     
-    protected Layer(int neuronCount, ActivationFunction func)
+    protected Layer(String name, int neuronCount, ActivationFunction func)
     {
+        this.name = name;
         for (int i=0;  i<neuronCount;  i++) {
-            neurons.add(new Neuron(func));
+            neurons.add(new Neuron(name+"N"+i, func));
         }
     }
     
@@ -53,7 +54,14 @@ public abstract class Layer
         return next;
     }
     
-    public Type type () {
-        return type;
+    public String name () {
+        return name;
+    }
+
+    public void print()
+    {
+        for (Neuron neuron : neurons) {
+            neuron.print();
+        }
     }
 }

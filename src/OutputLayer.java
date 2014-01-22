@@ -8,14 +8,14 @@ public class OutputLayer extends Layer
 
     public OutputLayer(int neuronCount)
     {
-        super(neuronCount, new SigmoidActivationFunction());
+        super("O", neuronCount, new SigmoidActivationFunction());
     }
     
     public double error () {
         return this.error;
     }
     
-    public void updateWeight (TrainingOutput trainingOutput)
+    public void propagate (TrainingOutput trainingOutput)
     {
         double error = 0;
         for (int i = 0; i<neurons.size(); i++) {
@@ -28,16 +28,10 @@ public class OutputLayer extends Layer
             
             neuron.setSigma (sigma);
             
-            neuron.updateWeight();
+            neuron.propagate();
         }
         
         this.error = (1/2) * error;
     }
 
-    public void print()
-    {
-        for (Neuron neuron :  neurons) {
-            System.out.println(format("'Output':{ 'value': %f, 'sigma': %f}", neuron.output(), neuron.sigma()));
-        }
-    }
 }

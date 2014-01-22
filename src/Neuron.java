@@ -3,17 +3,24 @@ public class Neuron
 {
     private ActivationFunction  function;
     
-    private Connections inputs = new Connections();
-    private Connections outputs = new Connections();
+    private Synapses inputs = new Synapses();
+    private Synapses outputs = new Synapses();
 
     private double output;
     private double sigma;
+    private double bias = (Math.random() * 2) - 1;
+    private double previousBiasDelta = 0;
+    private double momentum = 0.5;
+    private double trainingRate = 0.2;
+
+    private String name;
     
     public Neuron () {
         this.function = new IneffectiveActivationFunction();
     }
     
-    public Neuron (ActivationFunction function) {
+    public Neuron (String name, ActivationFunction function) {
+        this.name = name;
         this.function = function;
     }
     
@@ -23,7 +30,7 @@ public class Neuron
     }
     
     public double execute () {
-        output = function.calc(inputs.sum());
+        output = function.calc(inputs.sum() + bias);
         return output;
     }
     
@@ -32,14 +39,18 @@ public class Neuron
     }
     
     public void connect (Neuron to) {
-        Connection connection = new Connection(this, to);
-        outputs.add(connection);
-        to.inputs.add(connection);
+        Synapse synapse = new Synapse(this, to);
+        outputs.add(synapse);
+        to.inputs.add(synapse);
     }
 
-    public void updateWeight()
+    public void propagate()
     {
-        inputs.update();
+        double currentBiasDelta = -1 * trainingRate * this.sigma + momentum * previousBiasDelta;
+        this.bias += currentBiasDelta;
+        this.previousBiasDelta = currentBiasDelta;
+        
+        inputs.propagate();
     }
 
     public void setSigma(double sigma)
@@ -47,7 +58,7 @@ public class Neuron
         this.sigma = sigma;
     }
 
-    public double sumOfSigma()
+    public double sumOfOutSynapseSigmas()
     {
         return outputs.sumOfSigma();
     }
@@ -55,5 +66,11 @@ public class Neuron
     public double sigma()
     {
         return sigma;
+    }
+
+    public void print()
+    {
+        System.out.println(name + " : output =" + output );
+        inputs.print();
     }
 }
