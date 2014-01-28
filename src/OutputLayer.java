@@ -1,4 +1,3 @@
-import static java.lang.String.format;
 
 
 
@@ -22,6 +21,7 @@ public class OutputLayer extends Layer
             Neuron neuron = neurons.get(i);
             
             double diff = neuron.output() - trainingOutput.get(i);
+            System.out.println("diff :: " + neuron.output() +" - "+trainingOutput.get(i)+" = "+diff);
             error += Math.pow(diff, 2);
             
             double sigma = neuron.output() * (1 - neuron.output()) * (neuron.output() - trainingOutput.get(i));

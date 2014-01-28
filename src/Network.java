@@ -59,7 +59,7 @@ public class Network
         
         inputLayer.input(trainingSet.input());
 
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < 10000; k++) {
             for (int i = 0; i < hiddenLayers.size(); i++) {
                 HiddenLayer layer = hiddenLayers.get(i);
                 layer.execute();
@@ -99,17 +99,12 @@ public class Network
         List<TrainingInput> inputs = new ArrayList<TrainingInput>();
         List<TrainingOutput> outputs = new ArrayList<TrainingOutput>();
         
-        inputs.add(new TrainingInput(1,1));
+        inputs.add(new TrainingInput(4,4));
         
-        outputs.add(new TrainingOutput(2));
+        outputs.add(new TrainingOutput(16));
         
         TraningSet trainingSet = new TraningSet(inputs, outputs);
         
-        inputs = new ArrayList<TrainingInput>();
-        inputs.add(new TrainingInput(0,0));
-        
-        TraningSet testingSet = new TraningSet(inputs, null);
-        TraningSet testingSet2 = new TraningSet(inputs, null);
         network.train(trainingSet);
     }
     
